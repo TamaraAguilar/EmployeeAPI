@@ -35,4 +35,11 @@ app.MapGet("/employees/{id:int}", (int id) =>
     return Results.Ok(employee);
 });
 
+app.MapPost("/employees", (Employee employee) =>
+{
+    employee.Id = employees.Max(e => e.Id) + 1; // We're not using a database for now, so we manually assign an ID
+    employees.Add(employee);
+    return Results.Created($"/employees/{employee.Id}", employee);
+});
+
 app.Run();
