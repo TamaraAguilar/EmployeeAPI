@@ -4,3 +4,6 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 /.idea/.idea.EmployeeAPI/.idea/vcs.xml
+/EmployeeAPI.sln.DotSettings.user
+/EmployeeAPI.Tests/EmployeeAPI.Tests.csproj
+/EmployeeAPI.Tests/UnitTest1.cs
