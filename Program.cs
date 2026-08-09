@@ -13,6 +13,7 @@ var employees = new List<Employee>
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+var employeeRoute = app.MapGroup("employees");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -23,9 +24,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/employees", () => Results.Ok(employees));
+employeeRoute.MapGet(string.Empty, () => Results.Ok(employees));
 
-app.MapGet("/employees/{id:int}", (int id) =>
+employeeRoute.MapGet("{id:int}", (int id) =>
 {
     var employee = employees.SingleOrDefault(e => e.Id == id);
     if (employee == null)
@@ -35,7 +36,7 @@ app.MapGet("/employees/{id:int}", (int id) =>
     return Results.Ok(employee);
 });
 
-app.MapPost("/employees", (Employee employee) =>
+employeeRoute.MapPost(string.Empty, (Employee employee) =>
 {
     employee.Id = employees.Max(e => e.Id) + 1; // We're not using a database for now, so we manually assign an ID
     employees.Add(employee);
