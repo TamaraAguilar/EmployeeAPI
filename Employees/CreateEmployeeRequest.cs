@@ -1,9 +1,10 @@
 namespace EmployeeAPI.Employees;
 
-public class GetEmployeeResponse
+public class CreateEmployeeRequest
 {
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
+    public string? SocialSecurityNumber { get; set; }
 
     public string? Address1 { get; set; }
     public string? Address2 { get; set; }
