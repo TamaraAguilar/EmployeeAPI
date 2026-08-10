@@ -4,8 +4,8 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 var employees = new List<Employee>
 {
-    new Employee { Id = 1, FirstName = "John", LastName = "Doe" },
-    new Employee { Id = 2, FirstName = "Jane", LastName = "Doe" }
+    new Employee { Id = 1, FirstName = "John", LastName = "Doe", SocialSecurityNumber = "123-545-544"},
+    new Employee { Id = 2, FirstName = "Jane", LastName = "Doe", SocialSecurityNumber = "123-44-6454"}
 };
 
 // Add services to the container.
