@@ -1,4 +1,5 @@
 using EmployeeAPI;
+using EmployeeAPI.Employees;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,43 +25,73 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-employeeRoute.MapGet(string.Empty, () => Results.Ok(employees));
+employeeRoute.MapGet(string.Empty, () => {
+    return Results.Ok(employees.Select(employee => new GetEmployeeResponse() {
+        FirstName = employee.FirstName,
+        LastName = employee.LastName,
+        Address1 = employee.Address1,
+        Address2 = employee.Address2,
+        City = employee.City,
+        State = employee.State,
+        ZipCode = employee.ZipCode,
+        PhoneNumber = employee.PhoneNumber,
+        Email = employee.Email
+    }));
+});
 
-employeeRoute.MapGet("{id:int}", (int id) =>
-{
+employeeRoute.MapGet("{id:int}", (int id) => {
     var employee = employees.SingleOrDefault(e => e.Id == id);
     if (employee == null)
     {
         return Results.NotFound();
     }
-    return Results.Ok(employee);
+
+    return Results.Ok(new GetEmployeeResponse {
+        FirstName = employee.FirstName,
+        LastName = employee.LastName,
+        Address1 = employee.Address1,
+        Address2 = employee.Address2,
+        City = employee.City,
+        State = employee.State,
+        ZipCode = employee.ZipCode,
+        PhoneNumber = employee.PhoneNumber,
+        Email = employee.Email
+    });
 });
 
-employeeRoute.MapPost(string.Empty, (Employee employee) =>
-{
-    employee.Id = employees.Max(e => e.Id) + 1; // We're not using a database for now, so we manually assign an ID
-    employees.Add(employee);
-    return Results.Created($"/employees/{employee.Id}", employee);
+employeeRoute.MapPost(string.Empty, (CreateEmployeeRequest employee) => {
+    var newEmployee = new Employee {
+        Id = employees.Max(e => e.Id) + 1,
+        FirstName = employee.FirstName,
+        LastName = employee.LastName,
+        SocialSecurityNumber = employee.SocialSecurityNumber,
+        Address1 = employee.Address1,
+        Address2 = employee.Address2,
+        City = employee.City,
+        State = employee.State,
+        ZipCode = employee.ZipCode,
+        PhoneNumber = employee.PhoneNumber,
+        Email = employee.Email
+    };
+    employees.Add(newEmployee);
+    return Results.Created($"/employees/{newEmployee.Id}", employee);
 });
 
-employeeRoute.MapPut("{id:int}", (Employee employee, int id) =>
-{
+employeeRoute.MapPut("{id}", (UpdateEmployeeRequest employee, int id) => {
     var existingEmployee = employees.SingleOrDefault(e => e.Id == id);
     if (existingEmployee == null)
     {
         return Results.NotFound();
     }
-    
-    existingEmployee.FirstName = employee.FirstName;
-    existingEmployee.LastName = employee.LastName;
+
     existingEmployee.Address1 = employee.Address1;
     existingEmployee.Address2 = employee.Address2;
     existingEmployee.City = employee.City;
-    existingEmployee.State = employee.State;
+    existingEmployee.State =    employee.State;
     existingEmployee.ZipCode = employee.ZipCode;
     existingEmployee.PhoneNumber = employee.PhoneNumber;
     existingEmployee.Email = employee.Email;
-    
+
     return Results.Ok(existingEmployee);
 });
 
