@@ -43,4 +43,25 @@ employeeRoute.MapPost(string.Empty, (Employee employee) =>
     return Results.Created($"/employees/{employee.Id}", employee);
 });
 
+employeeRoute.MapPut("{id:int}", (Employee employee, int id) =>
+{
+    var existingEmployee = employees.SingleOrDefault(e => e.Id == id);
+    if (existingEmployee == null)
+    {
+        return Results.NotFound();
+    }
+    
+    existingEmployee.FirstName = employee.FirstName;
+    existingEmployee.LastName = employee.LastName;
+    existingEmployee.Address1 = employee.Address1;
+    existingEmployee.Address2 = employee.Address2;
+    existingEmployee.City = employee.City;
+    existingEmployee.State = employee.State;
+    existingEmployee.ZipCode = employee.ZipCode;
+    existingEmployee.PhoneNumber = employee.PhoneNumber;
+    existingEmployee.Email = employee.Email;
+    
+    return Results.Ok(existingEmployee);
+});
+
 app.Run();
