@@ -65,7 +65,7 @@ employeeRoute.MapPost(string.Empty, (CreateEmployeeRequest employeeRequest, IRep
     var isValid = Validator.TryValidateObject(employeeRequest, new ValidationContext(employeeRequest), validationProblems, true);
     if (!isValid)
     {
-        return Results.BadRequest(validationProblems);
+        return Results.BadRequest(validationProblems.ToValidationProblemDetails());
     }
     
     var newEmployee = new Employee {
