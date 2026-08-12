@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using EmployeeAPI;
 using EmployeeAPI.Abstractions;
 using EmployeeAPI.Employees;
+using FluentValidation;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IRepository<Employee>, EmployeeRepository>();
 builder.Services.AddProblemDetails();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 var app = builder.Build();
 var employeeRoute = app.MapGroup("employees");
@@ -60,14 +62,13 @@ employeeRoute.MapGet("{id:int}", (int id, IRepository<Employee> repository) => {
     });
 });
 
-employeeRoute.MapPost(string.Empty, (CreateEmployeeRequest employeeRequest, IRepository<Employee> repository) => {
-    var validationProblems = new List<ValidationResult>();
-    var isValid = Validator.TryValidateObject(employeeRequest, new ValidationContext(employeeRequest), validationProblems, true);
-    if (!isValid)
+employeeRoute.MapPost(string.Empty, async (CreateEmployeeRequest employeeRequest, IRepository<Employee> repository, IValidator<CreateEmployeeRequest> validator) => {
+    var validationResults = await validator.ValidateAsync(employeeRequest);
+    if (!validationResults.IsValid)
     {
-        return Results.BadRequest(validationProblems.ToValidationProblemDetails());
+        return Results.ValidationProblem(validationResults.ToDictionary());
     }
-    
+
     var newEmployee = new Employee {
         FirstName = employeeRequest.FirstName!,
         LastName = employeeRequest.LastName!,
@@ -83,7 +84,6 @@ employeeRoute.MapPost(string.Empty, (CreateEmployeeRequest employeeRequest, IRep
     repository.Create(newEmployee);
     return Results.Created($"/employees/{newEmployee.Id}", employeeRequest);
 });
-
 employeeRoute.MapPut("{id}", (UpdateEmployeeRequest employeeRequest, int id, IRepository<Employee> repository) => {
     var existingEmployee = repository.GetById(id);
     if (existingEmployee == null)
