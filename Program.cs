@@ -17,6 +17,7 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<FluentValidationFilter>();
 });builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(cfg => { }, typeof(EmployeeMappingProfile));
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
