@@ -19,18 +19,7 @@ public class EmployeesController : BaseController
     [HttpGet]
     public IActionResult GetAll()
     {
-        var employees = _repository.GetAll().Select(employee => new GetEmployeeResponse
-        {
-            FirstName = employee.FirstName,
-            LastName = employee.LastName,
-            Address1 = employee.Address1,
-            Address2 = employee.Address2,
-            City = employee.City,
-            State = employee.State,
-            ZipCode = employee.ZipCode,
-            PhoneNumber = employee.PhoneNumber,
-            Email = employee.Email
-        });
+        var employees = _mapper.Map<List<GetEmployeeResponse>>(_repository.GetAll());
 
         return Ok(employees);
     }
