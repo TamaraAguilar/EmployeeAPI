@@ -12,8 +12,10 @@ builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IRepository<Employee>, EmployeeRepository>();
 builder.Services.AddProblemDetails();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<FluentValidationFilter>();
+});builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(cfg => { }, typeof(EmployeeMappingProfile));
 
 var app = builder.Build();
