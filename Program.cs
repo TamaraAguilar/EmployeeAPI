@@ -1,5 +1,6 @@
 using EmployeeAPI;
 using EmployeeAPI.Abstractions;
+using EmployeeAPI.Employees;
 using FluentValidation;
 using Scalar.AspNetCore;
 
@@ -12,6 +13,8 @@ builder.Services.AddSingleton<IRepository<Employee>, EmployeeRepository>();
 builder.Services.AddProblemDetails();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAutoMapper(cfg => { }, typeof(EmployeeMappingProfile));
 
 var app = builder.Build();
 
