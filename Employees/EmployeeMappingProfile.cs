@@ -8,5 +8,6 @@ public class EmployeeMappingProfile : Profile
     {
         CreateMap<CreateEmployeeRequest, Employee>();
         CreateMap<UpdateEmployeeRequest, Employee>();
+        CreateMap<Employee, GetEmployeeResponse>();
     }
 }

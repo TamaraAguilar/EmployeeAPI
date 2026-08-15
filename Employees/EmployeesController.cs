@@ -43,19 +43,8 @@ public class EmployeesController : BaseController
         {
             return NotFound();
         }
-
-        var employeeResponse = new GetEmployeeResponse
-        {
-            FirstName = employee.FirstName,
-            LastName = employee.LastName,
-            Address1 = employee.Address1,
-            Address2 = employee.Address2,
-            City = employee.City,
-            State = employee.State,
-            ZipCode = employee.ZipCode,
-            PhoneNumber = employee.PhoneNumber,
-            Email = employee.Email
-        };
+        
+        var employeeResponse = _mapper.Map<Employee, GetEmployeeResponse>(employee);
         
         return Ok(employeeResponse);
     }
