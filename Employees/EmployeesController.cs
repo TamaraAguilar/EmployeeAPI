@@ -7,12 +7,10 @@ namespace EmployeeAPI.Employees;
 public class EmployeesController : BaseController
 {
     private readonly IRepository<Employee> _repository;
-    private readonly IValidator<CreateEmployeeRequest> _createValidator;
 
-    public EmployeesController(IRepository<Employee> repository, IValidator<CreateEmployeeRequest> createValidator)
+    public EmployeesController(IRepository<Employee> repository)
     {
         _repository = repository;
-        _createValidator = createValidator;
     }
 
     [HttpGet]
@@ -62,7 +60,7 @@ public class EmployeesController : BaseController
     [HttpPost]
     public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeRequest employeeRequest)
     {
-        var validationResults = await _createValidator.ValidateAsync(employeeRequest);
+        var validationResults = await ValidateAsync(employeeRequest);
         if (!validationResults.IsValid)
         {
             return ValidationProblem(validationResults.ToModelStateDictionary());
