@@ -9,11 +9,13 @@ public class EmployeesController : BaseController
 {
     private readonly IRepository<Employee> _repository;
     private readonly IMapper _mapper;
+    private readonly ILogger<EmployeesController> _logger;
 
-    public EmployeesController(IRepository<Employee> repository, IMapper mapper)
+    public EmployeesController(IRepository<Employee> repository, IMapper mapper, ILogger<EmployeesController> logger)
     {
         _repository = repository;
         _mapper = mapper;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -56,15 +58,27 @@ public class EmployeesController : BaseController
     [HttpPut("{id}")]
     public IActionResult UpdateEmployee(int id, [FromBody] UpdateEmployeeRequest employeeRequest)
     {
+        _logger.LogInformation("Updating employee with ID: {EmployeeId}", id);
+        
         var existingEmployee = _repository.GetById(id);
         if (existingEmployee == null)
         {
             return NotFound();
         }
-
+        
+        _logger.LogDebug("Updating employee details for ID: {EmployeeId}", id);
         existingEmployee = _mapper.Map<UpdateEmployeeRequest, Employee>(employeeRequest);
 
-        _repository.Update(existingEmployee);
-        return Ok(existingEmployee);
+        try
+        {
+            _repository.Update(existingEmployee);
+            _logger.LogInformation("Employee with ID: {EmployeeId} successfully updated", id);
+            return Ok(existingEmployee);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while updating employee with ID: {EmployeeId}", id);
+            return StatusCode(500, "An error occurred while updating the employee");
+        }
     }
 }
