@@ -25,7 +25,7 @@ public class EmployeesController : BaseController
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<GetEmployeeResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public IActionResult GetAll()
+    public IActionResult GetAllEmployees()
     {
         var employees = _mapper.Map<List<GetEmployeeResponse>>(_repository.GetAll());
 
