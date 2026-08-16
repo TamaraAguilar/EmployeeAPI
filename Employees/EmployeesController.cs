@@ -76,7 +76,26 @@ public class EmployeesController : BaseController
         _repository.Create(newEmployee);
         return CreatedAtAction(nameof(GetEmployeeById), new { id = newEmployee.Id }, newEmployee);
     }
-
+    
+    /// <summary>
+    /// Gets the benefits for an employee.
+    /// </summary>
+    /// <param name="employeeId">The ID to get the benefits for.</param>
+    /// <returns>The benefits for that employee.</returns>
+    [HttpGet("{employeeId}/benefits")]
+    [ProducesResponseType(typeof(IEnumerable<GetEmployeeResponseEmployeeBenefit>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult GetBenefitsForEmployee(int employeeId)
+    {
+        var employee = _repository.GetById(employeeId);
+        if (employee == null)
+        {
+            return NotFound();
+        }
+        return Ok(_mapper.Map<IEnumerable<GetEmployeeResponseEmployeeBenefit>>(employee));
+    }
+    
     /// <summary>
     /// Updates an employee.
     /// </summary>
