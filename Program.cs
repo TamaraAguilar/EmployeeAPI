@@ -6,10 +6,28 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+var employees = new List<Employee>
+{
+    new Employee { Id = 1, FirstName = "John", LastName = "Doe",
+        Benefits = new List<EmployeeBenefits>
+        {
+            new EmployeeBenefits { BenefitType = BenefitType.Health, Cost = 100 },
+            new EmployeeBenefits { BenefitType = BenefitType.Dental, Cost = 50 }
+        } },
+    new Employee { Id = 2, FirstName = "Jane", LastName = "Doe" }
+};
+
+var employeeRepository = new EmployeeRepository();
+foreach (var e in employees)
+{
+    employeeRepository.Create(e);
+}
+
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddSingleton<IRepository<Employee>, EmployeeRepository>();
+builder.Services.AddSingleton<IRepository<Employee>>(employeeRepository);
 builder.Services.AddProblemDetails();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddControllers(options =>

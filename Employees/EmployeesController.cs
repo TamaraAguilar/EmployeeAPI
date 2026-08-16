@@ -93,7 +93,7 @@ public class EmployeesController : BaseController
         {
             return NotFound();
         }
-        return Ok(_mapper.Map<IEnumerable<GetEmployeeResponseEmployeeBenefit>>(employee));
+        return Ok(_mapper.Map<IEnumerable<GetEmployeeResponseEmployeeBenefit>>(employee.Benefits));
     }
     
     /// <summary>
@@ -118,7 +118,7 @@ public class EmployeesController : BaseController
         }
         
         _logger.LogDebug("Updating employee details for ID: {EmployeeId}", id);
-        existingEmployee = _mapper.Map<UpdateEmployeeRequest, Employee>(employeeRequest);
+        _mapper.Map(employeeRequest, existingEmployee);
 
         try
         {
