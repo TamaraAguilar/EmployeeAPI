@@ -7,3 +7,7 @@ riderModule.iml
 /EmployeeAPI.sln.DotSettings.user
 /EmployeeAPI.Tests/EmployeeAPI.Tests.csproj
 /EmployeeAPI.Tests/UnitTest1.cs
+/Migrations/20260817015926_Init.cs
+/Migrations/20260817015926_Init.Designer.cs
+/Migrations/AppDbContextModelSnapshot.cs
+/employees.db
