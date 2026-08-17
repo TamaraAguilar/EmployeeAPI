@@ -2,6 +2,7 @@ using EmployeeAPI;
 using EmployeeAPI.Abstractions;
 using EmployeeAPI.Employees;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +37,10 @@ builder.Services.AddControllers(options =>
 });builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(cfg => { }, typeof(EmployeeMappingProfile));
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseSqlite("Data source=employees.db");
+});
 
 var app = builder.Build();
 
